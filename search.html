@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<!--
+	Colorized by TEMPLATED
+    templated.co @templatedco
+    Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Manhattan Express | Search Restaurants</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<!--	<link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>-->
+		<!--changing font to questrial to roboto -->
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-panels.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+				<link rel="stylesheet" href="css/skel-noscript.css" />
+				<link rel="stylesheet" href="css/style.css" />
+				<link rel="stylesheet" href="css/style-desktop.css" />
+		</noscript>
+		<style>
+
+			#map {
+				height: 500px;
+				width: 100%;
+			}
+			.controls {
+				margin-top: 10px;
+				border: 1px solid transparent;
+				border-radius: 2px 0 0 2px;
+				box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				height: 32px;
+				outline: none;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+			}
+
+			#pac-input {
+				background-color: #fff;
+				font-family: Roboto;
+				font-size: 15px;
+				font-weight: 300;
+				margin-left: 12px;
+				padding: 0 11px 0 13px;
+				text-overflow: ellipsis;
+				width: 300px;
+			}
+
+			#pac-input:focus {
+				border-color: #4d90fe;
+			}
+
+			.pac-container {
+				font-family: Roboto;
+			}
+
+			#type-selector {
+				color: #fff;
+				background-color: #4d90fe;
+				padding: 5px 11px 0px 11px;
+			}
+
+			#type-selector label {
+				font-family: Roboto;
+				font-size: 13px;
+				font-weight: 300;
+			}
+		</style>
+	</head>
+	<body>
+
+	<!-- Header -->
+		<div id="header">
+			<div id="logo-wrapper">
+				<div class="container">
+
+					<!-- Logo -->
+						<div id="logo">
+							<h1><a href="#">Manhattan Express</a></h1>
+							<span>Search for eateries</span>
+						</div>
+
+				</div>
+			</div>
+			<div class="container">
+				<!-- Nav -->
+					<nav id="nav">
+						<ul>
+							<li><a href="index.html">Homepage</a></li>
+							<li><a href="about.html">About Me</a></li>
+							<li><a href="recommendation.html">Recommendations</a></li>
+							<li class="active"><a href="search.html">search eateries</a></li>
+							<li><a href="contact.html">Contact</a></li>
+							<li><a href="credits.html">Credits</a></li>
+						</ul>
+					</nav>
+			</div>
+		</div>
+		</div>
+	<!-- Header -->
+
+	<!-- Banner -->
+		<div id="banner">
+			<div class="container">
+			</div>
+		</div>
+	<!-- /Banner -->
+
+	<!-- Main -->
+		<div id="main">
+
+			<!-- Main Content -->
+			<div class="container">
+				<div class="row">
+
+					<div class="9u skel-cell-important">
+						<section>
+							<header>
+								<h2 class="text-center">Where do you want to eat?</h2>
+								<br>
+								<input id="pac-input" class="controls" type="text"
+										placeholder="Let the journey begin!">
+
+							</header>
+							<div id = "map"></div>
+						</section>
+					</div>
+
+
+				</div>
+
+			</div>
+			<!-- /Main Content -->
+
+		</div>
+	<!-- /Main -->
+
+	<!-- Copyright -->
+		<div id="copyright">
+			<div class="container">
+				<section>
+				 				 <p>	&copy; COPYRIGHT 2016 CYNTHIA CHAN &bull; <a href="http://templated.co/colorized"><span id="template">Design by TEMPLATED</span></a></p>
+				</section>
+			</div>
+		</div>
+
+
+		<script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 40.783435, lng: -73.966249},
+          zoom: 13
+        });
+        var input = /** @type {!HTMLInputElement} */(
+            document.getElementById('pac-input'));
+
+        var types = document.getElementById('type-selector');
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+
+         var options = {
+  //types: ['(address)'],
+  componentRestrictions: {country: "us"}
+ };
+
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+
+        autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            window.alert("Autocomplete's returned place contains no geometry");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setIcon(/** @type {google.maps.Icon} */({
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(35, 35)
+          }));
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+          infowindow.open(map, marker);
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvzaxKQuRWYCQcBELjwTAVDJXvdjjLyOc&libraries=places&callback=initMap"
+        async defer>
+    </script>
+
+	</body>
+</html>
